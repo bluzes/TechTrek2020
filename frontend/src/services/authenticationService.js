@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import jwt_decode from "jwt-decode";
+
 const LOGIN_API = "http://techtrek2020.ap-southeast-1.elasticbeanstalk.com/login"
 const LOGIN_CRED_USERNAME = "elliotlow"
 const LOGIN_CRED_PASSWORD = 'd70dd062869f2e48'
@@ -10,8 +12,10 @@ class AuthService {
       password: password
     })
       const resData = res1.data;
-      if (resData) {
-        console.log(JSON.stringify(resData))
+      if (resData.status == 200) {
+        var token = await resData.text();
+        var jwt = jwt_decode(token);
+        console.log(jwt);
         localStorage.setItem("user", JSON.stringify(resData));
         return resData;
       } else {
