@@ -10,6 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import logo from '../assets/logo.png';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -17,8 +18,8 @@ import MuiAlert from '@material-ui/lab/Alert';
 import authenticationService from '../services/authenticationService';
 
 function Alert(props) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-  }
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,26 +55,26 @@ const useStyles = makeStyles((theme) => ({
 export default function LoginPage(props) {
 
   React.useEffect(() => {
-      if (localStorage.getItem('user')) {
-          props.history.push("/")
-      }
+    if (localStorage.getItem('user')) {
+      props.history.push("/")
+    }
   }, []);
 
   const classes = useStyles();
   const [loginDetails, setLoginDetails] = React.useState({
-      username: "",
-      password: ""
+    username: "",
+    password: ""
   });
 
   const [loginValidation, setLoginValidation] = React.useState({
     username: true,
     password: true
   });
-  
+
   const [loginSnack, setLoginSnack] = React.useState(false);
   const [isEmptySnack, setEmptySnack] = React.useState(true);
   const handleLoginSnackClose = () => {
-      setLoginSnack(false)
+    setLoginSnack(false)
   }
 
 
@@ -84,7 +85,7 @@ export default function LoginPage(props) {
     });
 
     if (event.target.value.length === 0) {
-        setLoginValidation({
+      setLoginValidation({
         ...loginValidation,
         [event.target.name]: true
       })
@@ -97,39 +98,51 @@ export default function LoginPage(props) {
   }
 
   const handleLogin = e => {
-      e.preventDefault();
-      if (loginValidation.username == true || loginValidation.password == true) {
-        setLoginSnack(true);
-        setEmptySnack(true);
-      } else {
-        authenticationService.login(loginDetails.username,loginDetails.password).then(
-            res => {
-              if (res != "error") {
-                props.history.push("/");
-              } else {
-                setLoginSnack(true);
-                setEmptySnack(false);
-              }
-            },
-            error => {
-                setLoginSnack(true);
-                setEmptySnack(false);
-            }
-            )   
+    e.preventDefault();
+    if (loginValidation.username == true || loginValidation.password == true) {
+      setLoginSnack(true);
+      setEmptySnack(true);
+    } else {
+      authenticationService.login(loginDetails.username, loginDetails.password).then(
+        res => {
+          if (res != "error") {
+            props.history.push("/");
+          } else {
+            setLoginSnack(true);
+            setEmptySnack(false);
+          }
+        },
+        error => {
+          setLoginSnack(true);
+          setEmptySnack(false);
+        }
+      )
     }
   }
   return (
-    <Grid container component="main" className={classes.root}>
+    <Grid container
+      container spacing={0}
+      direction="column"
+      alignItems="center"
+      justify="center"
+      style={{ minHeight: '100vh' }}
+      component="main" className={classes.root}>
       <CssBaseline />
-      <Grid item xs={false} sm={4} md={7} className={classes.image} />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+      {/* <Grid item xs={false} sm={4} md={7} className={classes.image} /> */}
+      <Grid
+        item
+        xs={6} sm={6} md={6}
+        component={Paper}
+        elevation={6}
+        square>
         <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
+          {/* <Avatar className={classes.avatar}>
+            <img src={logo}  />
+          </Avatar> */}
+          <img src={logo} width={200}/>
+          {/* <Typography component="h1" variant="h5">
             Sign in
-          </Typography>
+          </Typography> */}
           <form className={classes.form} noValidate>
             <TextField
               variant="outlined"
@@ -174,16 +187,16 @@ export default function LoginPage(props) {
             >
               Sign In
             </Button>
-            <Box mt={5}>DBS Team 13</Box>
+            {/* <Box mt={5}>DBS Team 13</Box> */}
           </form>
         </div>
       </Grid>
       <Snackbar open={loginSnack} autoHideDuration={2000} onClose={handleLoginSnackClose}>
-            <Alert onClose={handleLoginSnackClose} severity="error">
-              {isEmptySnack ? "Please enter both fields" : "Login failed, try again!"}
-            </Alert>
-          </Snackbar>
+        <Alert onClose={handleLoginSnackClose} severity="error">
+          {isEmptySnack ? "Please enter both fields" : "Login failed, try again!"}
+        </Alert>
+      </Snackbar>
     </Grid>
-    
+
   );
 }
