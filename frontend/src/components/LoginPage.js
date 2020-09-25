@@ -16,6 +16,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import authenticationService from '../services/authenticationService';
+import jwt_decode from "jwt-decode";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -106,6 +107,9 @@ export default function LoginPage(props) {
       authenticationService.login(loginDetails.username, loginDetails.password).then(
         res => {
           if (res != "error") {
+            var jwt = jwt_decode(res);
+            
+            props.updateTimeout(jwt);
             props.history.push("/");
           } else {
             setLoginSnack(true);
