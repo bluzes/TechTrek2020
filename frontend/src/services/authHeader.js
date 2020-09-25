@@ -3,7 +3,7 @@ export default function authHeader() {
   
     if (user) {
       //console.log(user.token);
-      return { Authorization: 'Bearer ' + user };
+      return user;
     } else {
       return {};
     }

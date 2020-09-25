@@ -29,6 +29,7 @@ import Slider from '@material-ui/core/Slider';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import authHeader from "../services/authHeader";
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -279,23 +280,24 @@ export default function CreateCustomer(props) {
         productType1.push(productTypesList[4])
       }
       console.log(productType1)
-      var registrationTime = Date.now().toString();
+      //var registrationTime = Date.now().toString();
+      var time = "25/09/2020 14:30:40";
       setFormDetails({
         ...formDetails,
-        productType: productType1
+        productType: productType1,
+        registrationTime: time
       })
       const res = await fetch("http://techtrek2020.ap-southeast-1.elasticbeanstalk.com/validateForm", {
         method: "post",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", 'Authorization': 'Bearer ' + authHeader()},
         //add authheader here
         body: JSON.stringify(formDetails)
       });
-
+      console.log(authHeader());
       const resData = await res.json();
       if (!res.ok) {
         setCreateCustomerSnack(true);
         setIsError(true);
-        throw new Error(resData.message);
         
       } 
       else if (res.ok) {
