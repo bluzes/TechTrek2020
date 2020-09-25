@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
+import Checkbox from '@material-ui/core/Checkbox';
 import Box from "@material-ui/core/Box";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -25,6 +26,9 @@ import FormHelperText from '@material-ui/core/FormHelperText'
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import Slider from '@material-ui/core/Slider';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -124,7 +128,38 @@ const useStyles = makeStyles(theme => ({
 
 export default function CreateCustomer(props) {
   const classes = useStyles();
+  const [productType, setProductType] = React.useState({
+    Investor: false,
+    Insurance: false, 
+    Loans: false,
+    Saving: false, 
+    Credit: false
+  });
 
+  const handleProductTypeChange = event => {
+    setProductType({
+      ...productType,
+      [event.target.name] : event.target.checked
+    });
+    if (!event.target.checked) {
+      if (productType.Investor == false && productType.Loans == false && productType.Saving == false && productType.Credit == false && productType.Insurance == false) {
+        setTextValidation({
+          ...textValidation,
+          productType: true
+        });
+      } else  {
+        setTextValidation({
+          ...textValidation,
+          productType: false
+        });
+      }
+    } else {
+      setTextValidation({
+        ...textValidation,
+        productType: false
+      });
+    }
+  }
   const handleSliderChange = (event, newValue) => {
       if (newValue < 18) {
           newValue = 18
@@ -163,11 +198,13 @@ export default function CreateCustomer(props) {
             ...textValidation,
             [e.target.name]: true
         })
+        setIsEmpty(true);
     } else {
         setTextValidation({
             ...textValidation,
             [e.target.name]: false
         }) 
+        setIsEmpty(false);
     }
   }
 
@@ -182,12 +219,37 @@ export default function CreateCustomer(props) {
   }
 
   const [isError, setIsError] = useState(true);
-  
+  const productTypesList = ['137: Investor', '070: Insurance', '291: Loans', '969: Savings', '555: Credit Cards'];
+  const branchCode = [120, 81];
+
   const createNewCustomer = async e => {
     if (isEmpty) {
       setEmptySnack(true);
     } else {
-      const res = await fetch("", {
+      //producttypes
+      var productType1 = [];
+      if (productType.Investor==true) {
+        productType1.push(productTypesList[0])
+      } 
+      if (productType.Insurance==true) {
+        productType1.push(productTypesList[1])
+      }
+      if (productType.Loans==true) {
+        productType1.push(productTypesList[2])
+      }
+      if (productType.Saving==true) {
+        productType1.push(productTypesList[3])
+      }
+      if (productType.Credit==true) {
+        productType1.push(productTypesList[4])
+      }
+      console.log(productType1)
+      var registrationTime = Date.now().toString();
+      setFormDetails({
+        ...formDetails,
+        productType: productType1
+      })
+      const res = await fetch("http://techtrek2020.ap-southeast-1.elasticbeanstalk.com/validateForm", {
         method: "post",
         headers: { "Content-Type": "application/json" },
         //add authheader here
@@ -234,9 +296,6 @@ export default function CreateCustomer(props) {
   const handleEmptySnack = () => {
     setEmptySnack(false);
   }
-
-    const productTypes = ['137: Investor', '070: Insurance', '291: Loans', '969: Savings', '555: Credit Cards'];
-    const branchCode = [120, 81];
     return(
         <Card className={classes.root}>
         <StyledCardHeader
@@ -354,26 +413,32 @@ export default function CreateCustomer(props) {
             />
           </form>
           <br/>
-          <FormControl  fullWidth error={textValidation.productType ? true : false}>
-          <InputLabel id="demo-simple-select-outlined-label">
-            Product Type
-          </InputLabel>
-          <Select
-            name="productType"
-            value={formDetails.productType}
-            error={textValidation.productType}
-            onChange={handleTextDetailsChange}
-            labelWidth="70"
-            fullWidth 
-          >
-            {productTypes.map((item, index) => (
-              <MenuItem key={index} value={item}>{item}</MenuItem>
-          ))}
-          </Select>
-          <FormHelperText>{textValidation.productType ?  "Please select product type!" : " "}</FormHelperText>
-          
-        </FormControl>
-          <br/>
+          <FormControl required error={textValidation.productType} component="fieldset" className={classes.formControl}>
+        <FormLabel component="legend">Select Product Type</FormLabel>
+        <FormGroup>
+          <FormControlLabel
+            control={<Checkbox checked={productType.Investor} onChange={handleProductTypeChange} name="Investor" />}
+            label="137 : Investor"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={productType.Insurance} onChange={handleProductTypeChange} name="Insurance" />}
+            label="070 : Insurance"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={productType.Loans} onChange={handleProductTypeChange} name="Loans" />}
+            label="291 : Loans"
+          />
+           <FormControlLabel
+            control={<Checkbox checked={productType.Savings} onChange={handleProductTypeChange} name="Saving" />}
+            label="969 : Savings"
+          />
+           <FormControlLabel
+            control={<Checkbox checked={productType.Credit} onChange={handleProductTypeChange} name="Credit" />}
+            label="555 : Credit Cards"
+          />
+        </FormGroup>
+        <FormHelperText>{textValidation.productType ?  "Please select product type!" : " "}</FormHelperText>
+      </FormControl>
           </Grid>
           </Grid> 
       <CardActions className={classes.input}>
