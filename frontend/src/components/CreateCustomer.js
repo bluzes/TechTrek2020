@@ -29,6 +29,7 @@ import Slider from '@material-ui/core/Slider';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import {DropzoneArea} from 'material-ui-dropzone'
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -420,7 +421,12 @@ export default function CreateCustomer(props) {
           
         </FormControl>
           <br/>
-    
+    			<DropzoneArea
+			  acceptedFiles={['image/*']}
+			  dropzoneText={"Drag and drop an image here or click"}
+			  onChange={(files) => console.log('Files:', files)}
+			/>
+			<br/>
           </Grid>
           <Grid item xs={12} sm={6}>
           <form className={classes.input} noValidate autoComplete="off">
