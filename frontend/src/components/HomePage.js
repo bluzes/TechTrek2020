@@ -4,6 +4,7 @@ import authenticationService from '../services/authenticationService';
 //port {DropzoneArea} from 'material-ui-dropzone'
 import Dropzone from 'react-dropzone'
 
+
 export default function HomePage(props) {
     const logout = e => {
         authenticationService.logout()
@@ -14,11 +15,12 @@ export default function HomePage(props) {
         props.history.push("/createcustomer");
     }
 
-
-
-
+    const flushPromises = () => new Promise(resolve => setImmediate(resolve))
 
     return(<div>
+     <h3>Welcome Officer</h3>
+        <p>Select Onboarding Customer Image</p>
+
         <Dropzone onDrop={acceptedFiles => console.log(acceptedFiles)}>
           {({getRootProps, getInputProps}) => (
             <section>
@@ -31,7 +33,7 @@ export default function HomePage(props) {
           )}
         </Dropzone>
 
-        <Button onClick={logout}>Logout</Button>
-        <Button onClick={createCustomer}>Create Customer</Button>
-        Im in home page!!</div>)
+    <Button onClick={logout}>Logout</Button>
+    <Button onClick={createCustomer}>Create Customer</Button>
+    </div>)
 }
