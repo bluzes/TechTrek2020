@@ -30,6 +30,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import authHeader from "../services/authHeader";
+import {DropzoneDialog} from 'material-ui-dropzone'
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -129,6 +130,18 @@ const useStyles = makeStyles(theme => ({
 
 export default function CreateCustomer(props) {
   const classes = useStyles();
+
+  const [imageOpen, setImageOpen] = React.useState({
+            open: false,
+            files: []
+  });
+  const handleImageSave = files => {
+    setImageOpen({
+      ...imageOpen, 
+      files: files
+    })
+    console.log(files[0]);
+  }
   const [productType, setProductType] = React.useState({
     Investor: false,
     Insurance: false, 
@@ -247,10 +260,13 @@ export default function CreateCustomer(props) {
       console.log(productType1)
       //var registrationTime = Date.now().toString();
       var time = "25/09/2020 14:30:40";
+      var image1 = imageOpen.files[0];
+      var image2 = new Blob(image1);
       setFormDetails({
         ...formDetails,
         productType: productType1,
-        registrationTime: time
+        registrationTime: time,
+        image: image2
       })
       const res = await fetch("http://techtrek2020.ap-southeast-1.elasticbeanstalk.com/validateForm", {
         method: "post",
@@ -387,7 +403,16 @@ export default function CreateCustomer(props) {
           
         </FormControl>
           <br/>
-    
+            <Button variant="outlined"
+            className={classes.addbutton} onClick={() => {setImageOpen({...imageOpen, open:true})}}>Image Upload</Button>
+            <DropzoneDialog
+                    open={imageOpen.open}
+                    acceptedFiles={['image/jpeg', 'image/png']}
+                    showPreviews={true}
+                    maxFileSize={2000000}
+                    onSave={handleImageSave}
+                    onClose={() => {setImageOpen({...imageOpen, open:false})}}
+                />
           </Grid>
           <Grid item xs={12} sm={6}>
           <form className={classes.input} noValidate autoComplete="off">
