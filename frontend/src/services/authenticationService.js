@@ -12,9 +12,8 @@ class AuthService {
       password: password
     })
       const resData = res1.data;
-      if (resData.status == 200) {
-        var token = await resData.text();
-        var jwt = jwt_decode(token);
+      if (resData) {
+        var jwt = jwt_decode(resData);
         console.log(jwt);
         localStorage.setItem("user", JSON.stringify(resData));
         return resData;
