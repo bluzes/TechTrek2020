@@ -164,7 +164,7 @@ export default function CreateCustomer(props) {
             [e.target.name]: true
         })
     } else {
-      switch([e.target.name]){
+      switch(e.target.name){
         case "NRIC":
           if((e.target.value[0].match(/^[A-Z]*$/)) && (e.target.value[e.target.value.length - 1].match(/^[A-Z]*$/)) && (e.target.value.length === 9) && e.target.value.substr(1,e.target.value.length-2).match([0-9]))
           {
@@ -173,12 +173,34 @@ export default function CreateCustomer(props) {
               [e.target.name]: false
             }) 
           }
-          else
-          {
-            console.log("false");
-          }
           break;
+          case "serviceOfficerName":
+          case "customerName":
+            if(e.target.value.length<=64)
+            {
+              setTextValidation({
+                ...textValidation,
+                [e.target.name]: false
+              }) 
+            }
+            break;
+            case "customerAge" :
+              if(e.target.value >= 18)
+              {
+                setTextValidation({
+                  ...textValidation,
+                  [e.target.name]: false
+                }) 
+              }
+              break;
+              case "branchCode":
+                //insert conditional checks for valid DBS branches here
+                break;
           default:
+              setTextValidation({
+                ...textValidation,
+                [e.target.name]: true
+            })
             break;
 
       }
