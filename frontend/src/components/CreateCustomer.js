@@ -164,10 +164,25 @@ export default function CreateCustomer(props) {
             [e.target.name]: true
         })
     } else {
-        setTextValidation({
-            ...textValidation,
-            [e.target.name]: false
-        }) 
+      switch([e.target.name]){
+        case "NRIC":
+          if((e.target.value[0].match(/^[A-Z]*$/)) && (e.target.value[e.target.value.length - 1].match(/^[A-Z]*$/)) && (e.target.value.length === 9) && e.target.value.substr(1,e.target.value.length-2).match([0-9]))
+          {
+            setTextValidation({
+              ...textValidation,
+              [e.target.name]: false
+            }) 
+          }
+          else
+          {
+            console.log("false");
+          }
+          break;
+          default:
+            break;
+
+      }
+
     }
   }
 
