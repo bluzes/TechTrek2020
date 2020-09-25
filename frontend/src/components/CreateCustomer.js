@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
     maxWidth: 1000,
     marginRight: "auto",
     marginLeft: "auto",
-    marginTop: "10px"
+    marginTop: "30px",
   },
   formControl: {
     margin: theme.spacing(1),
