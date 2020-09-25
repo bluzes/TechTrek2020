@@ -57,6 +57,17 @@ export default function LoginPage(props) {
       if (localStorage.getItem('user')) {
           props.history.push("/")
       }
+
+      const storedUsername = JSON.parse(localStorage.getItem("username"));
+      if (storedUsername) {
+        setLoginDetails({
+          username: storedUsername.username,
+          password: ''
+        });
+        setLoginValidation({...loginValidation,
+        username: false})
+      }
+
   }, []);
 
   const classes = useStyles();
@@ -75,7 +86,11 @@ export default function LoginPage(props) {
   const handleLoginSnackClose = () => {
       setLoginSnack(false)
   }
+  const [remember, setRemember] = React.useState(false);
 
+  const rememberName = event => {
+    setRemember(event.target.checked)
+  }
 
   const handleDetailsChange = event => {
     setLoginDetails({
@@ -104,7 +119,19 @@ export default function LoginPage(props) {
       } else {
         authenticationService.login(loginDetails.username,loginDetails.password).then(
             res => {
-              if (res != "error") {
+              console.log("Result " + res);
+              if (res) {
+                if (remember) {
+                  localStorage.setItem(
+                    "username",
+                    JSON.stringify({
+                      username: loginDetails.username
+                    })
+                  );
+                }
+                else {
+                  localStorage.removeItem("username");
+                }
                 props.history.push("/");
               } else {
                 setLoginSnack(true);
@@ -161,7 +188,10 @@ export default function LoginPage(props) {
               autoComplete="current-password"
             />
             <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
+              control={<Checkbox 
+                value="remember" 
+                checked={remember} 
+                value="remember" onChange={rememberName} color="primary" />}
               label="Remember me"
             />
             <Button
