@@ -15,7 +15,25 @@ export default function HomePage(props) {
         props.history.push("/createcustomer");
     }
 
-    const flushPromises = () => new Promise(resolve => setImmediate(resolve))
+    const handleFiles = (files) => {
+    }  
+
+    const fileDrop = (e) => {
+    e.preventDefault();
+    const files = e.dataTransfer.files;
+    if (files.length) {
+        handleFiles(files);
+        }
+    }
+    
+    const validateFile = (file) => {
+        const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/x-icon'];
+            if (validTypes.indexOf(file.type) === -1) {
+        return false;
+        }
+    return true;
+    }
+    
 
     return(<div>
      <h3>Welcome Officer</h3>
@@ -32,6 +50,7 @@ export default function HomePage(props) {
             </section>
           )}
         </Dropzone>
+
 
     <Button onClick={logout}>Logout</Button>
     <Button onClick={createCustomer}>Create Customer</Button>
